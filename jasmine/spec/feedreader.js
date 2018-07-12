@@ -21,7 +21,7 @@ $(function() {
          * allFeeds in app.js to be an empty array and refresh the
          * page?
          */
-        it('are defined', function() {
+        it('defined', function() {
             expect(allFeeds).toBeDefined();
             expect(allFeeds.length).not.toBe(0);
         });
@@ -40,6 +40,7 @@ $(function() {
         // and that the name is not empty.
         it('name defined', function () {
             allFeeds.forEach(function (feed) {
+                expect(feed.name).toBeDefined();
                 expect(feed.name.length).not.toBe(0);
             });
         });
@@ -68,7 +69,6 @@ $(function() {
     // TODO: Write a test that ensures when the loadFeed 
     // there is at least a single .entry element within the.feed container.
     describe('Initial Entries', function(){
-
         //the use of Jasmine's beforeEach and asynchronous done() function.
         beforeEach(function(done){
             loadFeed (0, function(){
@@ -77,7 +77,11 @@ $(function() {
         });
 
         it('has entries', function(){
+            //retrieves nodelist
+            let feed = document.querySelectorAll('.feed a');
             expect($('.entry .feed')).toBeDefined();
+            //nodelist greater than 0
+            expect(feed.length).toBeGreaterThan(0);
         });
 
     });
@@ -90,13 +94,23 @@ $(function() {
         //ensures when a new feed is loaded by the loadFeed
         beforeEach(function(done){
             loadFeed(0, function(){
-                entries0 = $('.feed').find(allFeeds.url);
-                done();
+                //nodlist
+                entries0 = document.querySelectorAll('.feed a');
+                //first el in nodelist get href
+                entries0 = entries0[0].getAttribute('href');
+                console.log(entries0);
+                 
+                loadFeed(1, function () {
+                    //nodelist
+                    entries1 = document.querySelectorAll('.feed a');
+                    //first el in nodelist get href
+                    entries1 = entries1[0].getAttribute('href');
+                    console.log(entries1);
+                    done();
+                });
+
             });
-            loadFeed(1, function(){
-                entries1 = $('.feed').find(allFeeds.url);
-                done();
-            });
+  
         });
 
         // the content actually changes
